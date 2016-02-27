@@ -1,5 +1,5 @@
 <?php
-
+App::uses('CakeEmail', 'Network/Email');
 class UsersController extends AppController {
 
   public $uses = array('User', 'Tweet'); // 各モデルの呼び出し
@@ -21,7 +21,7 @@ class UsersController extends AppController {
 
   public function beforeFilter() {
     parent::beforeFilter();
-    $this->Auth->allow('add');
+    $this->Auth->allow('add', 'sendmailcomplete', 'registcomplete');
   }
 
   public function add() { //新規会員登録
@@ -31,26 +31,42 @@ class UsersController extends AppController {
       if ($this->User->validates()) {
           // status => 0, regist_code => xxxxxxxxxxxxxxx を $this->data に入れる
 
-          $this->User->save($this->data);
+          $uuid = md5(uniqid());
 
+          $data = $this->data;
+          $data['User']['regist_code'] = $uuid;
 
-          $email = new CakeEmail( 'gmail');                        // インスタンス化
-          $email->from( array( 'yamapoon24@gmail.com' => 'Sender'));  // 送信元
-          $email->to( 'daiexile@yahoo.co.jp');                      // 送信先
-          $email->subject( 'twitter課題テスト');                      // メールタイトル
+          $this->User->save($data);
 
-          $email->send( 'ユーザー仮登録テスト');                             // メール送信
+          $email = new CakeEmail( 'gmail');                           // インスタンス化
+          $email->from( array( 'daiexile@yahoo.co.jp' => 'Sender'));  // 送信元
+          $email->to('yamapoon24@gmail.com');                         // 送信先
+          $email->subject('twitter課題テスト');                       // メールタイトル
+          $email->emailFormat( 'html');                         // フォーマット
+          $email->template( 'mailsendtest');                           // テンプレートファイル
+          $email->viewVars( array('registurl' => 'http://dev.elites.com/elites/twitter/users/registcomplete/', 'regist_code' => $uuid));
+          $email->send('');                       // メール送信
 
-          // 新規会員登録されたら自動的にログイン状態にする
-          $data = $this->User->find('first', array(
-            'condition' => array('email' => $this->data['User']['email'])
-          ));
-          $this->Auth->login($data);
-          $this->Session->setFlash('ログインに成功しました', 'default', array(), 'auth');
+          $this->redirect( array('contoller' => 'users', 'action' => 'sendmailcomplete'));
 
-          return $this->redirect($this->Auth->redirect());
       }
     }
+  }
+
+  public function sendmailcomplete() {
+    $this->Session->setFlash('仮登録が完了いたしました。指定のメールアドレスをご確認ください。', 'default', array(), 'auth');
+  }
+
+  public function registcomplete($regist_code = null) {
+
+    $data = $this->User->find('first', array(
+      'conditions' => array('regist_code' => $regist_code)
+    ));
+
+    $data['User']['status'] = 1;
+    $this->User->save($data, false);
+
+    $this->Session->setFlash('本登録が完了いたしました', 'default', array(), 'auth');
   }
 
   public function edit() {

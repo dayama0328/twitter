@@ -44,12 +44,12 @@ class EmailConfig {
 	);
 
 	public $gmail = array(
-        'host' => 'ssl://smtp.gmail.com',
-        'port' => 465,
-        'username' => 'yamapoon24@gmail.com', // ユーザ名
+        'host' => 'smtp.mail.yahoo.co.jp',
+        'port' => 587,
+        'username' => 'daiexile@yahoo.co.jp', // ユーザ名
         'password' => '50234191',           // パスワード
-        'transport' => 'Smtp',
-        'tls' => true
+        // 'transport' => 'Smtp',
+        'auth' => true
     );
 
 	public $smtp = array(

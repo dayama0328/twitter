@@ -1,0 +1,1 @@
+<?=$this->Session->flash('auth')?>

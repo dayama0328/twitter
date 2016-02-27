@@ -33,6 +33,8 @@ class User extends AppModel {
   );
 
   public function confPassword($field,$colum) { // $columはどこから出てきたのか
+    var_dump($field['password']);
+    var_dump($this->data['User'][$colum]);
     if ($field['password'] === $this->data['User'][$colum]) { // $field['password'] = password, $this->data['User'][$colum] = passwordconf
       $this->data['User']['password'] = Authcomponent::password($field['password']);
       return true;

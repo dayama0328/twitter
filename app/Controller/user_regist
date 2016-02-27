@@ -1,0 +1,26 @@
+        id: 16
+acountname: dayama0328
+  username: だやま
+     email: dayama0328@test.com
+  password: 124a88afdf773dc8e87d2aa0d03ee2700f7e6482
+    status: 0 => 1
+regist_code: hudwkdjwdgwjfgqwjfggjwjqugfufgw
+   created: 2016-02-12 14:35:44
+   updated: 2016-02-12 14:35:44
+
+
+<処理>
+UsersController のaddアクションで仮登録完了時に、
+　・status = 0
+　・regist_code = (ランダムな値)
+を発行してあげた上で、Usersテーブルに値を保存 => ユーザーに本登録完了のURLが記載されたメールを飛ばす
+
+本登録完了のURL => http://192.168.33.10/elites/twitter/users/complete?regist_code=xxxxxxxxxxxxxxxxx
+
+UsersContoller の complete メソッドを作る
+　・regist_code を受け取る
+　・select * from users where regist_code ="xxxxxxxxxxxxxxx"
+　・Usersの情報（レコード）を取得することができる
+　・status => 1 にする
+　・Usersの情報を更新（保存する）
+　・本登録が完了しました！

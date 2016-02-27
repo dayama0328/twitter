@@ -290,7 +290,7 @@
  * 		'prefix' => 'cake_', //[optional]  prefix every cache file with this string
  * 		'lock' => false, //[optional]  use file locking
  * 		'serialize' => true, //[optional]
- * 		'mask' => 0664, //[optional]
+ * 		'mask' => 0666, //[optional]
  *	));
  *
  * APC (http://pecl.php.net/package/APC)

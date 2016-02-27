@@ -57,3 +57,9 @@ ADD CONSTRAINT `reviews_ibfk_2` FOREIGN KEY (`tweet_id`) REFERENCES `tweets` (`i
 ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 insert into replies (id, user_id, tweet_id, acountname, username, content, created, updated) values (1, 15, 35, "motherhouse", "マザーハウス", "返信テスト", now(), now());
+
+ALTER table users add status int(11) not null after username;
+ALTER table users add regist_code varchar(255) not null after status;
+
+
+
